@@ -43,9 +43,12 @@ if ($result->num_rows > 0) {
     $userData = $result->fetch_assoc();
 
     // Direct password comparison (no hashing)
-    if ($pass === $userData['password']) {
+    // if ($pass === $userData['password']) {
+        if(password_verify($pass , $userData['password'])){
+
         // If the password matches, return success
         $response['success'] = true;
+        $response['id'] = $userData['id'];
     } else {
         // If the password doesn't match, return failure
         $response['success'] = false;
