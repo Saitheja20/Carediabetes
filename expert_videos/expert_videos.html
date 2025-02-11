@@ -163,7 +163,7 @@
             <button class="btn btn-primary" id="addBannerBtn">Add Banner</button>
         </span>
     </h1> 
-
+   
     <table border="1">
         <thead>
             <tr>
@@ -177,6 +177,11 @@
             <!-- Data will be inserted here by JavaScript -->
         </tbody>
     </table>
+    <div id="loadingimg" style="display: block; text-align: center;">
+        <!-- <h1>the image is</h1> -->
+        <img src="../assets/img/Loading1.gif" alt="Loading image">
+    </div>
+   
 
     <!-- Pop-Up Form -->
     <div class="popup-overlay" id="popupOverlay"></div>
@@ -233,6 +238,7 @@
                     `;
                     tableBody.innerHTML += row;
                 });
+                document.getElementById("loadingimg").style.display = "none";
             })
             .catch(error => console.log('Error fetching data:', error));
     </script>
