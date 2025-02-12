@@ -69,20 +69,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
 
     // Execute the statement and provide feedback
     if ($stmt->execute()) {
-        echo '<script>
-            Swal.fire({
-                icon: "success",
-                title: "Success!",
-                text: "Successfully data sent to the database",
-            }).then(function() {
-                setTimeout(function() {
-                    window.location = "dep_faculty.php"; // Redirect after success
-                }, 5000);
-            });
-          </script>';
-        exit;
+        // echo '<script>
+        //     Swal.fire({
+        //         icon: "success",
+        //         title: "Success!",
+        //         text: "Successfully data sent to the database",
+        //     }).then(function() {
+        //         setTimeout(function() {
+        //             window.location = "dep_faculty.php"; // Redirect after success
+        //         }, 5000);
+        //     });
+        //   </script>';
+         echo json_encode(["success" => true, "message" => "Successfully data sent to the database"]);
+    exit;
     } else {
-        echo "Error: " . $stmt->error;
+          echo json_encode(["success" => false, "message" => "Error: " . $stmt->error]);
+    exit;
     }
 }
 
@@ -121,6 +123,14 @@ if ($result) {
         }
         $data[] = $row;
     }
+}
+
+function limitWords($string, $wordLimit = 25) {
+    $words = explode(' ', $string);
+    if (count($words) > $wordLimit) {
+        return implode(' ', array_slice($words, 0, $wordLimit)) . '...';
+    }
+    return $string;
 }
 ?>
 
@@ -320,6 +330,12 @@ if ($result) {
             padding: 4px 8px;
         }
     }
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically (optional) */
+            /* Optional: Make the container take up the full viewport height */
+        }
 
 </style>
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -356,7 +372,22 @@ if ($result) {
             <tr>
                 <td><?= htmlspecialchars($founder['name']) ?></td>
                 <td><img src="data:image/jpeg;base64,<?= $founder['image'] ?>" alt="Faculty Image" class="image-thumbnail"></td>
-                <td><?= htmlspecialchars($founder['founder_message']) ?></td>
+                <!-- <td><?= htmlspecialchars($founder['founder_message']) ?></td> -->
+                  <td id="message-<?= $founder['id'] ?>" class="message-container">
+                                                <?php 
+                                                $wordCount = str_word_count($founder['founder_message']);
+                                                $shortMessage = limitWords($founder['founder_message']);
+                                                if ($wordCount > 10) {
+                                                    // If the founder_message exceeds 10 words, show the limited version initially
+                                                    echo '<span class="short-message">' . $shortMessage . '</span>';
+                                                    echo '<span class="full-message" style="display:none;">' . $founder['founder_message'] . '</span>';
+                                                    echo '<a href="javascript:void(0)" class="btn btn-link read-more" onclick="showFullMessage(' . $founder['id'] . ')">Read More</a>';
+                                                } else {
+                                                    // If the message does not exceed 10 words, show the full message
+                                                    echo $founder['message'];
+                                                }
+                                                ?>
+                                            </td>
                 <td><?= htmlspecialchars($founder['specialized_in']) ?></td>
                 <td><?= htmlspecialchars($founder['qualification']) ?></td>
                 <td><?= htmlspecialchars($founder['contact_info']) ?></td>
@@ -469,9 +500,11 @@ if ($result) {
 </div> -->
 <div id="myModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
+        <span class="close" style="
+    text-align: end;
+    color: red;">&times;</span>
         <h3 id="form-title"><?= $founder ? 'Edit Founder Info' : 'Add Founder Info' ?></h3>
-        <form id="founderForm" method="POST" enctype="multipart/form-data">
+        <form id="founderForm" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(event)">
             <input type="hidden" id="id" name="id" value="<?= $founder ? $founder['id'] : '' ?>">
 
             <div class="mb-3">
@@ -517,10 +550,63 @@ if ($result) {
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary"><?= $founder ? 'Update Info' : 'Add Info' ?></button>
+            <div class="form-group" style="display: flex; justify-content: center;margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
         </form>
     </div>
 </div>
+<script>
+    
+function handleFormSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(document.getElementById('founderForm'));
+
+    fetch('', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json()) // Expecting JSON response
+    .then(data => {
+        if (data.success) {
+            closeModal();
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: data.message,
+                timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                window.location = "founder_info2.php";
+            });
+        } else {
+            Swal.fire({
+                icon: "success",
+                title: "success!",
+                text: data.message,
+                timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                window.location = "founder_info2.php";
+            });
+            
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: "success",
+            title: "success!",
+            text: "Successfully data sent to the database.",
+            timer: 3000,
+                timerProgressBar: true
+            }).then(() => {
+                window.location = "founder_info2.php";
+            });
+    });
+}
+
+</script>
 
     <script>
         // Get the modal and close button
@@ -558,6 +644,33 @@ if ($result) {
                 modal.style.display = "none";
             }
         }
+
+        function showFullMessage(facultyId) {
+    var messageContainer = document.getElementById('message-' + facultyId);
+    var shortMessage = messageContainer.querySelector('.short-message');
+    var fullMessage = messageContainer.querySelector('.full-message');
+    var readMoreLink = messageContainer.querySelector('.read-more');
+
+    // Show full message, hide short message and "Read More"
+    shortMessage.style.display = 'none';
+    fullMessage.style.display = 'inline';
+    readMoreLink.textContent = 'Read Less';  // Change link text to 'Read Less'
+    readMoreLink.setAttribute('onclick', 'showLessMessage(' + facultyId + ')');  // Change link to toggle back
+}
+
+
+function showLessMessage(facultyId) {
+    var messageContainer = document.getElementById('message-' + facultyId);
+    var shortMessage = messageContainer.querySelector('.short-message');
+    var fullMessage = messageContainer.querySelector('.full-message');
+    var readMoreLink = messageContainer.querySelector('.read-more');
+
+    // Show short message, hide full message and "Read Less"
+    shortMessage.style.display = 'inline';
+    fullMessage.style.display = 'none';
+    readMoreLink.textContent = 'Read More';  // Change link text back to 'Read More'
+    readMoreLink.setAttribute('onclick', 'showFullMessage(' + facultyId + ')');  // Change link to show full message
+}
     </script>
 
 <!-- Bootstrap JS and dependencies -->

@@ -660,9 +660,9 @@ section{
                         <label for="image">Image:</label>
                         <input type="file" class="form-control" id="image" name="image" accept="image/*">
                     </div>
-                    <div class="form-group" style="display: flex; justify-content: center;margin-top: 10px;">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
+                        <div class="form-group" style="display: flex; justify-content: center;margin-top: 10px;">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
                 </form>
             </div>
         </div>
