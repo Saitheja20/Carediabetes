@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
         } else {
             // Update without image
             $stmt = $con->prepare("UPDATE about_us SET description=?, vision=?, mission=?, years_of_exp=?, happy_patients=?, experience_doctors=?, COM=?, online_consulting=?, lab_home_services=?,  status=? WHERE id=?");
-          $stmt->bind_param("sssiiisssii", $description, $vision, $mission, $years_of_exp, $happy_patients, $experience_doctors, $COM, $online_consulting, $lab_home_services, $status, $id);
+            $stmt->bind_param("sssiiisssii", $description, $vision, $mission, $years_of_exp, $happy_patients, $experience_doctors, $COM, $online_consulting, $lab_home_services, $status, $id);
         }
     } else {
         // Insert new record with image
@@ -64,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
             exit;
         }
 
-        $stmt = $con->prepare("INSERT INTO about_us (name, image, qualification, specialized_in, contact_info, happy_patients, experience_doctors, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $con->prepare("INSERT INTO about_us (description, image, vision, mission, years_of_exp, happy_patients, experience_doctors, COM, online_consulting, lab_home_services,  status) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?)");
         $null = NULL;
-        $stmt->bind_param("sbssssssi", $name, $null, $qualification, $specialized_in, $contact_info, $happy_patients, $experience_doctors, $status);
+        $stmt->bind_param("sbssiiisssi", $description, $null, $vision, $mission, $years_of_exp, $happy_patients, $experience_doctors, $COM, $online_consulting, $lab_home_services, $status);
         $stmt->send_long_data(1, $imageData);
     }
 
@@ -107,7 +107,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 // Fetch single record for editing (if editing)
 if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id'])) {
     $id = $_GET['id'];
-    $stmt = $pdo->prepare("SELECT * FROM about_us WHERE id = ? and status = 1");
+    echo "id is " . $id;
+    $stmt = $pdo->prepare("SELECT * FROM about_us WHERE id = ?");
     $stmt->execute([$id]);
     $founder = $stmt->fetch(PDO::FETCH_ASSOC);
 } else {
@@ -371,7 +372,10 @@ function limitWords($string, $wordLimit = 20)
 
          -->
     <!-- Founder Info List Table -->
-    <h3>Founder Info List</h3>
+    <h3>Founder Info List </h3>
+    <div class="col-md-2">
+        <button type="button" class="btn btn-primary w-100" onclick="addNewProfile()" disabled><span>+</span>Add</button>
+    </div>
     <table id="founderList" class="table table-striped table-bordered mt-3">
         <thead class="table-dark">
             <tr>
@@ -493,7 +497,7 @@ function limitWords($string, $wordLimit = 20)
 
                 <div class="mb-3">
                     <label for="vision" class="form-label">Vision</label>
-                     <textarea name="vision" id="vision" class="form-control" required><?= $founder ? htmlspecialchars($founder['vision']) : '' ?></textarea>
+                    <textarea name="vision" id="vision" class="form-control" required><?= $founder ? htmlspecialchars($founder['vision']) : '' ?></textarea>
                     <!-- <input type="text" name="vision" id="vision" value="<?= $founder ? htmlspecialchars($founder['vision']) : '' ?>" class="form-control" required> -->
                 </div>
 
@@ -503,12 +507,12 @@ function limitWords($string, $wordLimit = 20)
                     <!-- <input type="text" name="qualification" id="qualification" value="<?= $founder ? htmlspecialchars($founder['qualification']) : '' ?>" class="form-control" required> -->
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="years_of_exp" class="form-label">Years OF Experience</label>
                     <input type="text" name="years_of_exp" id="years_of_exp" value="<?= $founder ? htmlspecialchars($founder['years_of_exp']) : '' ?>" class="form-control" required>
                 </div>
 
-                 <div class="mb-3">
+                <div class="mb-3">
                     <label for="happy_patients" class="form-label">Happy Patients:</label>
                     <input type="text" name="happy_patients" id="happy_patients" value="<?= $founder ? htmlspecialchars($founder['happy_patients']) : '' ?>" class="form-control" required>
                 </div>
@@ -522,8 +526,8 @@ function limitWords($string, $wordLimit = 20)
                     <label for="COM" class="form-label"><?= $founder ? htmlspecialchars($founder['COM']) : '' ?></label>
                     <input type="text" name="COM" id="COM" value="<?= $founder ? htmlspecialchars($founder['COM']) : '' ?>" class="form-control" required>
                 </div>
-                
-                 <div class="mb-3">
+
+                <div class="mb-3">
                     <label for="online_consulting" class="form-label"><?= $founder ? htmlspecialchars($founder['online_consulting']) : '' ?></label>
                     <input type="text" name="online_consulting" id="online_consulting" value="<?= $founder ? htmlspecialchars($founder['online_consulting']) : '' ?>" class="form-control" required>
                 </div>
@@ -571,8 +575,8 @@ function limitWords($string, $wordLimit = 20)
                             text: data.message,
                             timer: 3000,
                             timerProgressBar: true
-                       }).then(() => {
-                           window.location = "about_us.php";
+                       // }).then(() => {
+                      //      window.location = "about_us.php";
                         });
                     } else {
                         Swal.fire({
@@ -581,8 +585,8 @@ function limitWords($string, $wordLimit = 20)
                             text: data.message,
                             timer: 3000,
                             timerProgressBar: true
-                       }).then(() => {
-                           window.location = "about_us.php";
+                      //  }).then(() => {
+                      //      window.location = "about_us.php";
                         });
 
                     }
@@ -595,8 +599,8 @@ function limitWords($string, $wordLimit = 20)
                         text: "Successfully data sent to the database.",
                         timer: 3000,
                         timerProgressBar: true
-                    }).then(() => {
-                       window.location = "about_us.php";
+                   // }).then(() => {
+                     //   window.location = "about_us.php";
                     });
                 });
         }
@@ -637,6 +641,28 @@ function limitWords($string, $wordLimit = 20)
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        function addNewProfile() {
+            // Clear the form fields
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+            document.getElementById('description').value = "";
+            document.getElementById('vision').value = "";
+            document.getElementById('mission').value = "";
+            document.getElementById('years_of_exp').value = "";
+            document.getElementById('happy_patients').value = "";
+            document.getElementById('experience_doctors').value = "";
+            document.getElementById('COM').value = "";
+            document.getElementById('online_consulting').value = "";
+            document.getElementById('lab_home_services').value = "";
+            document.getElementById('location').value = "";
+            document.getElementById('image').value = "";
+            document.getElementById('id').value = "";
+            document.getElementById('status').value = ""; // Reset image input
+            //  openModal()
+
+            // uploadimagefunction(1); // Open the modal
         }
 
         function showFullMessage(facultyId) {
