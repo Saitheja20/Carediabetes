@@ -21,12 +21,15 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
     // Get the form data
-    $name = $_POST['name'];
-    $founder_message = $_POST['founder_message'];
-    $specialized_in = $_POST['specialized_in'];
-    $qualification = $_POST['qualification'];
-    $contact_info = $_POST['contact_info'];
-    $location = $_POST['location'];
+    $description = $_POST['description'];
+    $vision = $_POST['vision'];
+    $mission = $_POST['mission'];
+    $years_of_exp = $_POST['years_of_exp'];
+    $happy_patients = $_POST['happy_patients'];
+    $experience_doctors = $_POST['experience_doctors'];
+    $COM = $_POST['COM'];
+    $online_consulting = $_POST['online_consulting'];
+    $lab_home_services = $_POST['lab_home_services'];
     $status = $_POST['status'];
     $id = isset($_POST['id']) ? $_POST['id'] : null;
     // Check if an image was uploaded without errors
@@ -45,14 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
         // Update existing record
         if ($imageData !== null) {
             // Update with image 
-            $stmt = $con->prepare("UPDATE about_us SET name=?, image=?, qualification=?, specialized_in=?, contact_info=?, founder_message=?, location=?, status=? WHERE id=?");
+            $stmt = $con->prepare("UPDATE about_us SET description=?, image=?, vision=?, mission=?, years_of_exp=?, happy_patients=?, experience_doctors=?, COM=?, online_consulting=?, lab_home_services=?,  status=? WHERE id=?");
             $null = NULL;
-            $stmt->bind_param("sbsssssii", $name, $null, $qualification, $specialized_in, $contact_info, $founder_message, $location, $status, $id);
+            $stmt->bind_param("sbssiiisssii", $description, $null, $vision, $mission, $years_of_exp, $happy_patients, $experience_doctors, $COM, $online_consulting, $lab_home_services, $status, $id);
             $stmt->send_long_data(1, $imageData);
         } else {
             // Update without image
-            $stmt = $con->prepare("UPDATE about_us SET name=?, qualification=?, specialized_in=?, contact_info=?, founder_message=?, location=?, status=? WHERE id=?");
-            $stmt->bind_param("ssssssii", $name, $qualification, $specialized_in, $contact_info, $founder_message, $location, $status, $id);
+            $stmt = $con->prepare("UPDATE about_us SET description=?, vision=?, mission=?, years_of_exp=?, happy_patients=?, experience_doctors=?, COM=?, online_consulting=?, lab_home_services=?,  status=? WHERE id=?");
+          $stmt->bind_param("sssiiisssii", $description, $vision, $mission, $years_of_exp, $happy_patients, $experience_doctors, $COM, $online_consulting, $lab_home_services, $status, $id);
         }
     } else {
         // Insert new record with image
@@ -61,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
             exit;
         }
 
-        $stmt = $con->prepare("INSERT INTO about_us (name, image, qualification, specialized_in, contact_info, founder_message, location, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $con->prepare("INSERT INTO about_us (name, image, qualification, specialized_in, contact_info, happy_patients, experience_doctors, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $null = NULL;
-        $stmt->bind_param("sbssssssi", $name, $null, $qualification, $specialized_in, $contact_info, $founder_message, $location, $status);
+        $stmt->bind_param("sbssssssi", $name, $null, $qualification, $specialized_in, $contact_info, $happy_patients, $experience_doctors, $status);
         $stmt->send_long_data(1, $imageData);
     }
 
@@ -104,14 +107,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 // Fetch single record for editing (if editing)
 if (isset($_GET['action']) && $_GET['action'] == 'edit' && isset($_GET['id'])) {
     $id = $_GET['id'];
-    $stmt = $pdo->prepare("SELECT * FROM about_us WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT * FROM about_us WHERE id = ? and status = 1");
     $stmt->execute([$id]);
     $founder = $stmt->fetch(PDO::FETCH_ASSOC);
 } else {
     $founder = null;
 }
 
-$query = "SELECT * FROM about_us";
+$query = "SELECT * FROM about_us WHERE status = 1";
 $result = mysqli_query($con, $query);
 $data = [];
 if ($result) {
@@ -361,7 +364,7 @@ function limitWords($string, $wordLimit = 20)
 
 <body>
 
-    <h2>Manage Founder Info</h2>
+    <h2>Manage About Us Info</h2>
     <!-- <div class="container">
     <div class="row">
         <div class="col-lg-12 col">
@@ -372,10 +375,10 @@ function limitWords($string, $wordLimit = 20)
     <table id="founderList" class="table table-striped table-bordered mt-3">
         <thead class="table-dark">
             <tr>
-                <th>Name</th>
+                <!-- <th>Name</th> -->
                 <th>Image</th>
                 <th>description</th>
-                <th>Messages</th>
+                <!-- <th>Messages</th> -->
                 <th>vision</th>
                 <th>mission</th>
                 <th>years_of_exp</th>
@@ -391,7 +394,7 @@ function limitWords($string, $wordLimit = 20)
         <tbody>
             <?php foreach ($data as $founder): ?>
                 <tr>
-                    <td><?= htmlspecialchars($founder['online_consulting']) ?></td>
+                    <!-- <td><?= htmlspecialchars($founder['online_consulting']) ?></td> -->
                     <td><img src="data:image/jpeg;base64,<?= $founder['image'] ?>" alt="Faculty Image" class="image-thumbnail"></td>
                     <!-- <td><?= htmlspecialchars($founder['messages']) ?></td> -->
                     <td id="message-<?= $founder['id'] ?>" class="message-container">
@@ -409,7 +412,7 @@ function limitWords($string, $wordLimit = 20)
                         }
                         ?>
                     </td>
-                    <td><?= htmlspecialchars($founder['messages']) ?></td>
+                    <!-- <td><?= htmlspecialchars($founder['messages']) ?></td> -->
                     <!-- <td><?= htmlspecialchars($founder['vision']) ?></td> -->
                     <td id="message-<?= $founder['id'] ?>" class="message-container">
                         <?php
@@ -473,10 +476,10 @@ function limitWords($string, $wordLimit = 20)
             <form id="founderForm" method="POST" enctype="multipart/form-data" onsubmit="return handleFormSubmit(event)">
                 <input type="hidden" id="id" name="id" value="<?= $founder ? $founder['id'] : '' ?>">
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="name" class="form-label">Name:</label>
                     <input type="text" name="name" id="name" value="<?= $founder ? htmlspecialchars($founder['online_consulting']) : '' ?>" class="form-control" required>
-                </div>
+                </div> -->
 
                 <div class="mb-3">
                     <label for="image" class="form-label">Image:</label>
@@ -484,7 +487,7 @@ function limitWords($string, $wordLimit = 20)
                 </div>
 
                 <div class="mb-3">
-                    <label for="description" class="form-label">Founder Message:</label>
+                    <label for="description" class="form-label">about Message:</label>
                     <textarea name="description" id="description" class="form-control" required><?= $founder ? htmlspecialchars($founder['description']) : '' ?></textarea>
                 </div>
 
@@ -516,17 +519,17 @@ function limitWords($string, $wordLimit = 20)
                 </div>
 
                 <div class="mb-3">
-                    <label for="COM" class="form-label">Courier of Medicine</label>
+                    <label for="COM" class="form-label"><?= $founder ? htmlspecialchars($founder['COM']) : '' ?></label>
                     <input type="text" name="COM" id="COM" value="<?= $founder ? htmlspecialchars($founder['COM']) : '' ?>" class="form-control" required>
                 </div>
                 
                  <div class="mb-3">
-                    <label for="online_consulting" class="form-label">Online Consulting</label>
+                    <label for="online_consulting" class="form-label"><?= $founder ? htmlspecialchars($founder['online_consulting']) : '' ?></label>
                     <input type="text" name="online_consulting" id="online_consulting" value="<?= $founder ? htmlspecialchars($founder['online_consulting']) : '' ?>" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="lab_home_services" class="form-label">Lab Home Services</label>
+                    <label for="lab_home_services" class="form-label"><?= $founder ? htmlspecialchars($founder['lab_home_services']) : '' ?></label>
                     <input type="text" name="lab_home_services" id="lab_home_services" value="<?= $founder ? htmlspecialchars($founder['lab_home_services']) : '' ?>" class="form-control" required>
                 </div>
 
@@ -568,8 +571,8 @@ function limitWords($string, $wordLimit = 20)
                             text: data.message,
                             timer: 3000,
                             timerProgressBar: true
-                        }).then(() => {
-                            window.location = "founder_info2.php";
+                       }).then(() => {
+                           window.location = "about_us.php";
                         });
                     } else {
                         Swal.fire({
@@ -578,8 +581,8 @@ function limitWords($string, $wordLimit = 20)
                             text: data.message,
                             timer: 3000,
                             timerProgressBar: true
-                        }).then(() => {
-                            window.location = "founder_info2.php";
+                       }).then(() => {
+                           window.location = "about_us.php";
                         });
 
                     }
@@ -593,7 +596,7 @@ function limitWords($string, $wordLimit = 20)
                         timer: 3000,
                         timerProgressBar: true
                     }).then(() => {
-                        window.location = "founder_info2.php";
+                       window.location = "about_us.php";
                     });
                 });
         }
