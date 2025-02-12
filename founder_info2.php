@@ -350,14 +350,14 @@ function limitWords($string, $wordLimit = 20) {
 
 <body>
 
-    <h2>Manage Founder Info</h2>
+    <!-- <h2>Manage Founder Info</h2> -->
 <div class="container">
     <div class="row">
         <div class="col-lg-12 col">
 
         
     <!-- Founder Info List Table -->
-    <h3>Founder Info List</h3>
+    <h3>Founder Info Update</h3>
    <table id="founderList" class="table table-striped table-bordered mt-3">
     <thead class="table-dark">
         <tr>
