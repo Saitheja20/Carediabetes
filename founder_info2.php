@@ -125,7 +125,7 @@ if ($result) {
     }
 }
 
-function limitWords($string, $wordLimit = 25) {
+function limitWords($string, $wordLimit = 20) {
     $words = explode(' ', $string);
     if (count($words) > $wordLimit) {
         return implode(' ', array_slice($words, 0, $wordLimit)) . '...';
@@ -240,7 +240,7 @@ function limitWords($string, $wordLimit = 25) {
     }
 
     #founderList th {
-        background-color: #4CAF50;
+        /* background-color: #4CAF50; */
         color: white;
         font-size: 1.1rem;
     }
@@ -260,10 +260,10 @@ function limitWords($string, $wordLimit = 25) {
 
     /* Styling for Images */
     .image-thumbnail {
-        width: 80px;
-        height: 80px;
+        width: 186px;
+        height: 212px;
         object-fit: cover;
-        border-radius: 50%;
+        border-radius: 11%;
     }
 
     /* Button Styling */
@@ -319,11 +319,16 @@ function limitWords($string, $wordLimit = 25) {
         }
 
         /* Adjust image size for small devices */
-        .image-thumbnail {
+        /* .image-thumbnail {
             width: 60px;
             height: 60px;
-        }
-
+        } */
+@media (max-width: 768px) {
+    .image-thumbnail {
+        width: 230px;
+        height: 168px;
+    }
+}
         /* Adjust button size for small devices */
         .edit-btn {
             font-size: 0.8rem;
@@ -354,7 +359,7 @@ function limitWords($string, $wordLimit = 25) {
     <!-- Founder Info List Table -->
     <h3>Founder Info List</h3>
    <table id="founderList" class="table table-striped table-bordered mt-3">
-    <thead>
+    <thead class="table-dark">
         <tr>
             <th>Name</th>
             <th>Image</th>
