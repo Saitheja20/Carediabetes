@@ -330,15 +330,15 @@ function limitWords($string, $wordLimit = 25)
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        /* form label {
-    font-size: 16px;
-    font-weight: bold;
-   
-    padding: 1rem;
-    background-color: #1D3A6C;
-    color: white;
+                    /* form label {
+                font-size: 16px;
+                font-weight: bold;
+            
+                padding: 1rem;
+                background-color: #1D3A6C;
+                color: white;
 
-} */
+            } */
 
         form label {
             font-size: 16px;
