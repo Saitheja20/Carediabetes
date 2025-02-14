@@ -10,28 +10,8 @@ if (!$con) {
     // echo "connection successful";
 }
 $search = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Sanitize and prepare the search term
-$search = mysqli_real_escape_string($con, $search);
-
-// Add wildcards to the search term for the LIKE clause
-$searchTerm = '%' . $search . '%';
-
-// Correct the SQL query by using parameterized queries
-$query = "SELECT * FROM services WHERE header LIKE ? OR main_points LIKE ? OR description_of_service LIKE ?";
-
-// Prepare the query
-$stmt = mysqli_prepare($con, $query);
-
-// Bind the parameter to the prepared statement
-mysqli_stmt_bind_param($stmt, 'sss', $searchTerm, $searchTerm, $searchTerm);
-
-// Execute the statement
-mysqli_stmt_execute($stmt);
-
-// Get the result of the query
-$result = mysqli_stmt_get_result($stmt);
-
+$query = "SELECT * FROM services Where header LIKE $search OR main_points LIKE $search OR description_of_service like $search";
+$result = mysqli_query($con, $query);
 if (!$result) {
     die("Invalid query: " . mysqli_error($con));
 } else {
@@ -358,85 +338,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
 }
 
 
-/* Overall styling */
-.search-form {
-    width: 100%;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-}
-
-/* Wrapper around search input and button for alignment */
-.search-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    position: relative;
-}
-
-/* Search Input Styling */
-.search-input {
-    width: 100%;
-    padding: 12px 20px;
-    border: 2px solid #5e5e5e2b;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #0056b3;
-}
-
-/* Search Button Styling */
-.search-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin-left: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-    background-color: #0056b3;
-}
-
-/* Add New Service Button Wrapper */
-.add-service-button-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-}
-
-.add-service-button {
-    background-color: #28a745;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    transition: background-color 0.3s ease;
-}
-
-.add-service-button:hover {
-    background-color: #218838;
-    cursor: pointer;
-}
-
-.add-service-button:focus {
-    outline: none;
-}
-
-
 /* .card-buttons {
     position: absolute !important; 
     top: 10px !important;
@@ -492,27 +393,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
 </div> -->
 
     <div class="container">
-       <div class="row" style="margin-bottom: 10px;">
-    <!-- Search Form Section -->
-        <div class="col-lg-8">
-            <form method="GET" action="services.php" class="search-form">
-                <div class="search-wrapper">
-                    <input type="text" name="search" id="search" class="search-input" placeholder="Search for services Like Service Name, Main Points, Descreptions..." />
-                    <button type="submit" id="searchButton" class="search-button">Search</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Add New Service Button -->
-        <div class="col-lg-4">
-            <div class="add-service-button-wrapper">
-                <button class="btn btn-primary add-service-button" onclick="addNewCardService()">
-                    <span style="font-size: large; font-weight: 900;">+</span> Add New Service
-                </button>
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- <div class="col-lg-4 col-sm-12 mb-4"> Adjust column size as needed -->
+                    <!-- Card for Adding New Entry -->
+                    <!-- <div class="card" style="height: 100%; cursor: pointer;" onclick="openAddModal()">
+                        
+                        <div class="card-header text-center">
+                            <h5 class="card-title">Add New Service</h5>
+                        </div>
+                    </div> -->
+                   <div style="display: flex; justify-content: flex-end;margin: 10px;">
+                        <button class="btn btn-primary" onclick="addNewCardService()">
+                           <span style="font-size: large;font-weight: 900;">+</span> Add New Service</button>
+                    </div>
+                <!-- </div> -->
             </div>
         </div>
-    </div>
-
 
 
 
