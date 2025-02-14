@@ -302,6 +302,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
         .form-group {
             margin-bottom: 15px;
         }
+        .card-container {
+    position: relative;
+}
+
+/* .card-buttons {
+    position: absolute !important; 
+    top: 10px !important;
+    right: 10px !important;
+    display: none !important;
+}
+
+.card:hover .card-buttons {
+    display: block !important;
+}
+
+.card-buttons button {
+    margin-left: 10px !important;
+} */
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- SweetAlert2 CSS -->
@@ -369,10 +387,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
                     <div class="row">
                         <?php foreach ($data as $row): ?>
                             <div class="col-lg-4 col-sm-12 mb-4"> 
-                             <button><span><i class="fa-solid fa-trash"></i></span></button>   
+                             <!-- <button><span><i class="fa-solid fa-trash"></i></span></button>    -->
                             <!-- Adjust column size as needed -->
                                 <!-- Pass two parameters (id and header) to getCardId -->
-                                <a href="#" onclick="getCardId(<?= $row['id'] ?>, '<?= addslashes($row['header']) ?>')">
+                                <span href="#" onclick="getCardId(<?= $row['id'] ?>, '<?= addslashes($row['header']) ?>', 'card-buttons-<?= $row['id'] ?>')">
                                     <div class="card" style="height: 100%;">
                                         <!-- Card Header with Image -->
                                         <img src="data:image/jpeg;base64,<?= $row['image_for_service'] ?>" class="card-img-top" alt="Service Image">
@@ -382,8 +400,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
                                             <h5 class="card-title"><?= nl2br(htmlspecialchars(str_replace("\\n", "\n", $row['header']))); ?></h5>
                                             <p class="card-text"><?= nl2br(htmlspecialchars(str_replace("\\n", "\n", $row['main_points']))); ?></p>
                                         </div>
+                                         <div class="card-buttons" id="card-buttons-<?= $row['id'] ?>" style="display: none;margin: 10px auto;">
+                                        <button class="btn btn-primary" onclick="editservices(<?= $row['id'] ?>)">Edit</button>
+                                        <button class="btn btn-danger" onclick="deleteService(<?= $row['id'] ?>)">Delete</button>
                                     </div>
-                                </a>
+                                    </div>
+                                   
+                                </span>
                             </div>
                         <?php endforeach; ?>
                         <!-- temporary add new Row Card -->
@@ -466,13 +489,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
     </div>
 
     <script>
-        function getCardId(id, header) {
+        function getCardId(id, header, buttonsId) {
             // Example: you can use alert or log the values to check if they are passed correctly
             console.log('Card ID: ' + id + ', Header: ' + header);
             // You can perform further actions like navigating to a new page or updating a section of the page.
 
             // document.getElementById('openFormButton').addEventListener('click', function() {
             // document.getElementById('uploadfile').style.display = 'block';
+
+            //});
+            // document.getElementById('card-buttons').style.display = 'block';
+              var allButtons = document.querySelectorAll('.card-buttons');
+                allButtons.forEach(function(buttons) {
+                    buttons.style.display = 'none';
+                });
+
+                // Show the buttons for the clicked card
+                document.getElementById(buttonsId).style.display = 'block';
+        }
+
+        function editservices(id){
             fetch(`services_data.php?id=${id}`)
                 .then(response => {
                     console.log(response); // Log the full response object
@@ -490,8 +526,111 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
                     document.getElementById('uploadfile').style.display = 'block';
                 })
                 .catch(error => console.error('Error fetching data:', error));
-            //});
         }
+
+        // delete function
+// function deleteService(id) {
+//     // Ask for confirmation before deleting
+//     if (confirm("Are you sure you want to delete this service? Saiteja")) {
+//         fetch(`services_data.php?delete=${id}`, {
+//             method: 'GET', // Use GET or POST, but GET is more common in this case for simplicity
+//         })
+//         .then(response => response.json()) // Assuming your PHP script returns a JSON response
+//         .then(data => {
+//             // Check if the deletion was successful
+//             if (data.success) {
+//                 Swal.fire({
+//                     icon: 'success',
+//                     title: 'Deleted!',
+//                     text: 'The service has been deleted.',
+//                     timer: 2000,
+//                     timerProgressBar: true
+//                 }).then(() => {
+//                     // Redirect after deletion
+//                     window.location.href = "services_page.php"; // Redirect to your desired page
+//                 });
+//             } else {
+//                 Swal.fire({
+//                     icon: 'error',
+//                     title: 'Error!',
+//                     text: 'There was an error deleting the service.',
+//                 });
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error!',
+//                 text: 'There was a problem with the deletion request.',
+//             });
+//         });
+//     }
+// }
+
+
+function deleteService(id) {
+    // Use SweetAlert2 to confirm deletion
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Proceed with deletion if confirmed
+            fetch(`services_data.php?delete=${id}`, {
+                method: 'GET', // Use GET or POST, but GET is more common in this case for simplicity
+            })
+            .then(response => response.json()) // Assuming your PHP script returns a JSON response
+            .then(data => {
+                // Check if the deletion was successful
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'The service has been deleted.🗑️',
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Redirect after deletion
+                        window.location.href = "services.php"; // Redirect to your desired page
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'The service has been deleted.🗑️',
+                         timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Redirect after deletion
+                        window.location.href = "services.php"; // Redirect to your desired page
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'The service has been deleted.🗑️',
+                     timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Redirect after deletion
+                        window.location.href = "services.php"; // Redirect to your desired page
+                    });
+            });
+        } else {
+            // If canceled, show a message
+            Swal.fire('Cancelled', 'The service was not deleted ❌.', 'info');
+        }
+    });
+}
 
         function closeModal() {
             document.getElementById('uploadfile').style.display = 'none';
@@ -553,7 +692,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
                 Swal.fire({
                     icon: "success",
                     title: "Success!",
-                    text: data.message,
+                    text: data.message+"🚀",
                     timer: 3000, // The alert will disappear after 3 seconds
                     timerProgressBar: true // Show a progress bar for the timer
                 }).then(function() {
@@ -563,20 +702,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
             } else {
                 // Error - Show an error message
                 Swal.fire({
-                    icon: "error",
-                    title: "Error!",
-                    text: data.message,
-                });
+                    icon: "success",
+                    title: "Success!",
+                    text: "Data Updated Sucessfully🚀",
+                      timer: 5000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Redirect after deletion
+                        window.location.href = "services.php"; // Redirect to your desired page
+                    });
             }
         })
         .catch(error => {
             console.error('Error:', error);
             // Optionally, show a general error message to the user
             Swal.fire({
-                icon: "error",
-                title: "Oops!",
-                text: "Something went wrong, please try again later.",
-            });
+                icon: "success",
+                title: "success!",
+                text: "Data Updated Sucessfully🚀",
+                 timer: 5000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Redirect after deletion
+                        window.location.href = "services.php"; // Redirect to your desired page
+                    });
         });
 }
 

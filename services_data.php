@@ -44,21 +44,22 @@ if (isset($_GET['delete'])) {
 
     // Make sure the ID is valid before proceeding
     if ($deleteId > 0) {
-        $query = "DELETE FROM doctors_data2 WHERE id = ?";
+        $query = "DELETE FROM services WHERE id = ?";
         $stmt = $con->prepare($query);
         $stmt->bind_param("i", $deleteId);
 
         if ($stmt->execute()) {
-            $_SESSION['message'] = "Record deleted successfully!";
-            // Redirect after deletion to avoid re-posting on refresh
-            header("Location: doctors_info.php?message=deleted");
-            exit;
+            // Return JSON response indicating success
+            echo json_encode(['success' => true]);
         } else {
-            $_SESSION['message'] = "Error deleting the record: " . $stmt->error;
-            header("Location: doctors_info.php?message=error");
-            exit;
+            // Return JSON response indicating failure
+            echo json_encode(['success' => false, 'message' => "Error deleting the record: " . $stmt->error]);
         }
+    } else {
+        echo json_encode(['success' => false, 'message' => "Invalid ID"]);
     }
+    exit; // End the script after handling the request
 }
+
 
 ?>
