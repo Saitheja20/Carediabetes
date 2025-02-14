@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 if (!$con) {
     die("Connection failed: " . mysqli_connect_error());
 } else {
-    echo "connection successful";
+    // echo "connection successful";
 }
 
 $query = "SELECT * FROM services";
@@ -305,6 +305,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
         .card-container {
     position: relative;
 }
+
+.card {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.card-body {
+    transition: opacity 0.3s ease;
+}
+
+.card-buttons {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: scale(0.8);  /* Initially smaller size */
+    position: absolute; /* To position buttons inside the card */
+    bottom: 10px; /* Positioning them near the bottom */
+    left: 50%;
+    transform: translateX(-50%) scale(0.8);
+}
+
+.card:hover {
+    transform: scale(1.05); /* Scaling up the card on hover */
+}
+
+.card:hover .card-body {
+    opacity: 1; /* Dimming the card body */
+}
+
+.card:hover .card-buttons {
+    opacity: 1; /* Show the buttons */
+    transform: translateX(-50%) scale(1); /* Center and scale up the buttons */
+}
+
 
 /* .card-buttons {
     position: absolute !important; 
