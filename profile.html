@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- blank.html  Tue, 07 Jan 2020 03:35:42 GMT -->
+<!-- layout-default.html  Tue, 07 Jan 2020 03:35:42 GMT -->
 <head>
 <meta charset="UTF-8">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-<title>Care Diabetes  &mdash; Centre</title>
+<title>Layout &rsaquo; Default &mdash; CodiePie</title>
 
 <!-- General CSS Files -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <link rel="stylesheet" href="assets/modules/bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="assets/modules/fontawesome/css/all.min.css">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 <!-- CSS Libraries -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 <!-- Template CSS -->
 <link rel="stylesheet" href="assets/css/style.min.css">
 <link rel="stylesheet" href="assets/css/components.min.css">
+<style>
+    a{
+        text-decoration: none;
+        color: black;
+        font-size: large;
+    }
 
-
+</style>
 </head>
 
 <body class="layout-4">
@@ -26,11 +34,10 @@
 <div class="page-loader-wrapper">
     <span class="loader"><span class="loader-inner"></span></span>
 </div>
-
 <div id="app">
     <div class="main-wrapper main-wrapper-1">
         <div class="navbar-bg"></div>
-        
+    
         <!-- Start app top navbar -->
         <nav class="navbar navbar-expand-lg main-navbar">
             <form class="form-inline mr-auto">
@@ -50,8 +57,10 @@
                     <!-- <img alt="image" src="assets/img/avatar/avatar-1.png" class="rounded-circle mr-1"> -->
                     <div class="d-sm-none d-lg-inline-block">Admin</div></a>
                     <div class="dropdown-menu dropdown-menu-right">
+                        <!-- <a href="my_profile/profile.html" class="dropdown-item has-icon text-primary" id="logoutButton"><i class="fa-solid fa-user"></i> My Profile</a> -->
+                        <!-- <a href="my_profile/profile.html" class="dropdown-item has-icon text-danger" ><i class="fas fa-sign-out-alt"></i> My Profile</a> -->
                         <a href="profile.html" class="dropdown-item has-icon text-primary" ><i class="fa-solid fa-user"></i> My Profile</a>
-                       
+                        
                         <a href="#" class="dropdown-item has-icon text-danger" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     </div>
                 </li>
@@ -76,7 +85,7 @@
                         <a href="patient-education.html"><i class="fa-regular fa-id-card"></i><span>Patient Education</span></a>
                         
                     </li>
-                    <li class="dropdown active"><a class="nav-link" href="testimonials.html"><i class="fa-solid fa-comment"></i><span>Patient Testimonials</span></a></li>
+                    <li class="dropdown"><a class="nav-link" href="testimonials.html"><i class="fa-solid fa-comment"></i><span>Patient Testimonials</span></a></li>
                 <!-- <div class="mt-4 mb-4 p-3 hide-sidebar-mini">
                     <a href="https://getcodiepie.com/docs" class="btn btn-primary btn-lg btn-block btn-icon-split"><i class="fas fa-rocket"></i> Documentation</a>
                 </div> -->
@@ -90,18 +99,23 @@
                 <li class="dropdown"><a class="nav-link " href="founder_info.html"><i class="fa-solid fa-hospital"></i>
                         <span>Founder Message</span></a>
                 </li>
+                <li class="dropdown active"><a class="nav-link " href="services.html"><i class="fa-solid fa-bed-pulse"></i>
+                        <span>Services</span></a>
+                </li>
             </aside>
         </div>
+
+
 
         <!-- Start app main Content -->
         <div class="main-content">
             <section class="section">
-                <!-- <div class="section-header">
-                    <h1>Blank Page</h1>
-                </div> -->
 
                 <div class="section-body">
-                    <iframe src="testimonials/testimonials.html" width="90%" height="800px"></iframe>
+                    <!-- <h2 class="section-title">This is Example Page</h2> -->
+                    <div class="section-body">
+                        <iframe src="my_profile/profile.html" width="90%" height="800px"></iframe>
+                    </div>
                 </div>
             </section>
         </div>
@@ -109,15 +123,14 @@
         <!-- Start app Footer part -->
         <footer class="main-footer">
             <div class="footer-left">
-                 <div class="bullet"></div>  <a href="https://carediabetescentre.com/" target="_blank">Care Diabetes Centre</a>
+                 <div class="bullet"></div>  <a href="">Care Diabetes Centre</a>
             </div>
             <div class="footer-right">
-                <div class="bullet"></div> Design & Developed By  <a href="https://kakatiyasolutions.com/" target="_blank">Kakatiya Slutions</a>
+                <div class="bullet"></div> Design & Developed By  <a href="https://kakatiyasolutions.com/">Kakatiya Slutions</a>
             </div>
         </footer>
     </div>
 </div>
-
 
 <script>
     // Check if the user is logged in
@@ -151,9 +164,7 @@
 <!-- Template JS File -->
 <script src="js/scripts.js"></script>
 <script src="js/custom.js"></script>
-
-
 </body>
 
-<!-- blank.html  Tue, 07 Jan 2020 03:35:42 GMT -->
+<!-- layout-default.html  Tue, 07 Jan 2020 03:35:42 GMT -->
 </html>

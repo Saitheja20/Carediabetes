@@ -110,6 +110,7 @@
                         <a href="features-activities.html" class="dropdown-item has-icon"><i class="fas fa-bolt"></i> Activities</a>
                         <a href="features-settings.html" class="dropdown-item has-icon"><i class="fas fa-cog"></i> Settings</a>
                         <div class="dropdown-divider"></div> -->
+                        <a href="profile.html" class="dropdown-item has-icon text-primary" ><i class="fa-solid fa-user"></i> My Profile</a>
                         <a href="#" class="dropdown-item has-icon text-danger" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a>
                     </div>
                 </li>
@@ -215,10 +216,10 @@
         <!-- Start app Footer part -->
         <footer class="main-footer">
             <div class="footer-left">
-                 <div class="bullet"></div>  <a href="">care diabete scentre</a>
+                 <div class="bullet"></div>  <a href="https://carediabetescentre.com/" target="_blank">Care Diabetes Centre</a>
             </div>
             <div class="footer-right">
-                <div class="bullet"></div> Design & Developed By <a href="https://kakatiyasolutions.com/">Kakatiya Slutions</a>
+                <div class="bullet"></div> Design & Developed By <a href="https://kakatiyasolutions.com/" target="_blank">Kakatiya Slutions</a>
             </div>
         </footer>
     </div>
@@ -226,20 +227,20 @@
 
 <script>
     // Check if the user is logged in
-    if (localStorage.getItem('isLoggedIn') !== 'true') {
+    if (sessionStorage.getItem('isLoggedIn') !== 'true') {
         // If not logged in, redirect to login page
         window.location.href = 'login.html';
     } else {
-        // Display the username from localStorage
-        document.getElementById('usernameDisplay').innerText = localStorage.getItem('username');
+        // Display the username from sessionStorage
+        document.getElementById('usernameDisplay').innerText = sessionStorage.getItem('username');
     }
 </script>
 <script>
     // debugger
         document.getElementById('logoutButton').addEventListener('click', function() {
-            // Remove login state from localStorage
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('username');
+            // Remove login state from sessionStorage
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('username');
             // Redirect to login page after logout
             window.location.href = 'login.html';
         });

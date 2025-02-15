@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
         body{
             font-family:'montserrat', serif;
@@ -170,8 +168,8 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>Banner</th>
+                <th>Image Title</th>
+                <!--<th>Banner</th>-->
                 <th>Actions</th>
             </tr>
         </thead>
@@ -195,10 +193,10 @@
             <button type="button" id="closePopupBtn" class="btn-primary">Close</button>
         </form>
     </div>
+    
     <script>
-        
         // Fetch data and populate table
-        fetch('patient_education.php')
+        fetch('Patient_education.php')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -208,15 +206,13 @@
             .then(data => {
                 const tableBody = document.getElementById('imageTableBody');
                 data.forEach(user => {
-                    const deleteLink = `<a href="Patient_education.php?delete=${user.id}" class="delete-link" data-id="${user.id}">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </a>`;
+                    const deleteLink = `<a href="Patient_education.php?delete=${user.id}" onclick="return confirm('Are you sure you want to delete this image?');"><i class="fa-solid fa-trash"></i></a>`;
                     // const updateLink = `<a href="Patient_education.php?update=${user.id}" onclick="return confirm('Are you sure you want to update this image?');">Update</a>`;
                     const row = `
                         <tr>
                             <td>${user.id}</td>
                             <td>${user.title}</td>
-                            <td>Banner ${user.id}</td>
+                            
                             <td style="text-align:center">${deleteLink} </td>
                         </tr>
                     `;
@@ -224,12 +220,8 @@
                 });
             })
             .catch(error => console.log('Error fetching data:', error));
-
-
-
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         // Show Pop-Up Form
         const addBannerBtn = document.getElementById('addBannerBtn');
@@ -261,43 +253,29 @@
 
         const id = event.target.dataset.id; // Fetch the `id` from the link's data attribute
 
-        // SweetAlert confirmation dialog
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Proceed with deletion
-                fetch(`Patient_education.php?delete=${id}`, {
-                    method: 'GET'
+        // Confirm deletion
+        if (confirm('Are you sure you want to delete this image?')) {
+            fetch(`Patient_education.php?delete=${id}`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        // Remove the row from the table
+                        event.target.closest('tr').remove();
+                    } else {
+                        alert(data.message);
+                    }
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire('Deleted!', data.message, 'success');
-                            // Remove the row from the table
-                            event.target.closest('tr').remove();
-                        } else {
-                            Swal.fire('Error!', data.message, 'error');
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire('Error!', 'Something went wrong!', 'error');
-                        console.error('Error:', error);
-                    });
-            }
-        });
+                .catch(error => console.error('Error:', error));
+        }
     }
 });
 
-
     </script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 
 </body>

@@ -53,12 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image'])) {
 }
 
 // Fetch data for displaying JSON (only if no delete request is made)
-$query = "SELECT id, title, image FROM patient_education";
+$query = "SELECT id, title FROM patient_education";
 $result = mysqli_query($con, $query);
 
 $data = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $row['image'] = base64_encode($row['image']); // Encode image to Base64
+   // $row['image'] = base64_encode($row['image']); // Encode image to Base64
     $data[] = $row;
 }
 
