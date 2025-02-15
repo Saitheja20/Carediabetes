@@ -181,9 +181,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['image_for_service']) 
         // Update existing record
         if ($imageForServiceData !== null || $imageForServiceDetailsData !== null || $bannerImageForServiceData !== null) {
             // Update with images
-            $stmt = $con->prepare("UPDATE services SET header=?, image_for_service=?, image_for_service_details=?, main_points=?, description_of_service=?, banner_image_for_service=?, status=? WHERE id=?");
+            $stmt = $con->prepare("UPDATE services SET header=?, image_for_service=?, image_for_service_details=?, banner_image_for_service=?, main_points=?, description_of_service=?, status=? WHERE id=?");
             $null = NULL;
-            $stmt->bind_param("sbbssbii", $header, $null, $null, $main_points, $description_of_service, $null,  $status, $id);
+            $stmt->bind_param("sbbbssii", $header, $null, $null,$null, $main_points, $description_of_service,   $status, $id);
 
             if ($imageForServiceData !== null) {
                 $stmt->send_long_data(1, $imageForServiceData); // Send image for service
